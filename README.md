@@ -1,3 +1,3 @@
 # protocol-classification
 
-uhh ill write this later
+NLP text classification using the Naive Bayes model.
