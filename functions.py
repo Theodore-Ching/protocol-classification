@@ -1,53 +1,21 @@
 import numpy as np
 import pandas as pd
-import nltk
-from nltk.tokenize import word_tokenize
-from nltk.corpus import wordnet as wn
-from nltk.stem import WordNetLemmatizer as wnLemmatizer
-from nltk import pos_tag
-from nltk.corpus import stopwords
-import re
+from sklearn import model_selection, naive_bayes, svm, metrics
 
-def preproc(data):
+def train_test(model_type, vec_type, train_vectors, test_vectors, train_target, test_target):
     """
-    Preprocesses raw text data for NLP model
-
-    @param: DataFrame data - data to be processed
-    @return: processed data
-    @rtype: DataFrame
+    Trains and tests a specified model using given vectors and targets
     """
-    #print(data.loc[:20])
+    if model_type == 'SVM':                                                                                                                                 # set SVM model 
+        model = svm.SVC(C = 1.0, kernel = 'linear', degree = 3, gamma = 'auto')
+        model_name = 'Support Vector Machine'
+    else:                                                                                                                                                   # set Naive Bayes model (default)
+        model = naive_bayes.MultinomialNB()
+        model_name = 'Naive Bayes Classifier'
+    
+    model.fit(train_vectors, train_target)                                                                                                                  # train model
+    predictions = model.predict(test_vectors)                                                                                                               # test model
+        
+    print(model_name + " Accuracy (" + vec_type + ") -> " , metrics.f1_score(test_target, predictions , average='macro'), "%")                              # print accuracy score
 
-    data['AllText'] = data['AllText'].str.replace(r'[^a-zA-Z\d\s\-]', '', regex = True)                             # remove non-alphanumeric text (excluding spaces and hyphens)
-    data['AllText'] = data['AllText'].str.lower()                                                                   # lowercase all text
-    data['AllText'] = data.apply(lambda row: word_tokenize(row['AllText']), axis=1)                                 # tokenize all text into words
-
-    wnl = wnLemmatizer()
-    for i,entry in enumerate(data['AllText']):                                                                      # remove all stopwords and lemmatize them into their root word based on part-of-speech
-        words = []
-        for word,tag in pos_tag(entry):
-            if word not in stopwords.words('english'):
-                root_word = wnl.lemmatize(word,pos_tagger(tag))
-                words.append(root_word)
-        data.loc[i,'AllText'] = str(words)
-
-    #print(data.loc[:20])
-    return data
-
-def pos_tagger(tag):
-    """
-    Returns simplified WordNet tag given a NLTK part-of-speech tag
-
-    @param: string tag - NLTK pos tag
-    @return: WordNet tag
-    @rtype: string
-    """
-
-    if tag.startswith('V'):                                                                                         # default pos tag is noun
-        return wn.VERB
-    elif tag.startswith('J'):
-        return wn.ADJ
-    elif tag.startswith('R'):
-        return wn.ADJ
-    else:          
-        return wn.NOUN
+    return
