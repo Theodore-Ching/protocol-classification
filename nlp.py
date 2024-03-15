@@ -23,7 +23,7 @@ trainY = train.target
 testY = test.target
 
 
-# code for reading Yahoo Answers dataset
+# code for Yahoo Answers dataset
 '''
 data = pd.read_csv(r"C:\Stuff\Coding\protocol classification\archive\train.csv", header=None, encoding='latin-1')                                                                                               # read raw data from csv into DataFrame
 data.columns = ['Index', 'Text1', 'Text2', 'Text3']
