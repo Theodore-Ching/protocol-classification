@@ -6,7 +6,7 @@ from sklearn import model_selection
 from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer
 
 do_tfidf = True                                                                                                                                                                                                 # config
-do_count = False
+do_count = True
 do_NB = True
 do_SVM = True
 
