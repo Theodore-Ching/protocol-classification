@@ -25,15 +25,16 @@ testY = test.target
 
 # code for Yahoo Answers dataset
 '''
-data = pd.read_csv(r"C:\Stuff\Coding\protocol classification\archive\train.csv", header=None, encoding='latin-1')                                                                                               # read raw data from csv into DataFrame
-data.columns = ['Index', 'Text1', 'Text2', 'Text3']
-headers = data.columns[1:]
-data[headers] = ' ' + data[headers].astype(str)
-data['AllText'] = data[headers].apply(lambda row: '_'.join(row.values.astype(str)), axis=1)                                                                                                                     # condense all text columns into a joint column
+train = pd.read_csv(r"C:\Stuff\Coding\protocol classification\archive\train.csv", nrows= 1000000, header=None, encoding='latin-1')                                                                               # read raw training data
+test = pd.read_csv(r"C:\Stuff\Coding\protocol classification\archive\test.csv", header=None, encoding='latin-1')                                                                                                 # read raw test data
+train = functions.join_cols(train, 3)                                                                                                                                                                            # condense all text into joint column
+test = functions.join_cols(test, 3)
 
-trainX, testX, trainY, testY = model_selection.train_test_split(data['AllText'],data['Index'],test_size=0.1)                                                                                                    # set 10% of data as test data and the rest as training data
+trainX = train['All']
+testX = test['All']
+trainY = train["Index"]
+testY = test["Index"]
 '''
-
 
 print("# of training documents = ", len(trainX))
 
